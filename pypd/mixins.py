@@ -6,7 +6,7 @@ import requests
 import datetime
 from numbers import Number
 
-import pypd
+from .log import log
 from .errors import (BadRequest, UnknownError, InvalidResponse, InvalidHeaders)
 
 
@@ -59,7 +59,7 @@ class ClientMixin(object):
 
         Need to be able to inject Mocked response objects here.
         """
-        pypd.log('Doing HTTP request: {0} with headers: {1}'.format(
+        log('Doing HTTP request: {0} with headers: {1}'.format(
             args[0], kwargs.get('headers')), level=logging.DEBUG)
         requests_method = getattr(requests, method)
         return self._handle_response(requests_method(*args, **kwargs))
@@ -99,7 +99,7 @@ class ClientMixin(object):
             query_params.pop(k)
             values = [v_['id'] if isinstance(v_, ClientMixin) else v_
                       for v_ in v]
-            query_params[key] = ','.join(values)
+            query_params[key] = values
 
         kwargs = {
             'headers': headers,
